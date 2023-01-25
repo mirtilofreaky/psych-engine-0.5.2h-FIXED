@@ -1,14 +1,14 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Build
+name: Android Build CI
 
-# Controls when the workflow will run
+# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,21 +16,71 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  android:
+    name: buildAndroid
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+        
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r21e
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1
+        with:
+          distribution: 'zulu'
+          java-version: '19'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v1.1.5
+        with:
+          haxe-version: 4.2.5
+          
+      - name: Install haxelib stuff
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          haxelib --quiet install lime 7.9.0
+          haxelib --quiet install openfl 9.1.0
+          haxelib --quiet install flixel 4.11.0
+          haxelib --quiet install lime-samples
+          haxelib --quiet install hscript
+          haxelib --quiet install flixel-ui 2.4.0
+          haxelib --quiet install flixel-addons 2.11.0
+          haxelib --quiet install flxanimate 1.2.0
+          haxelib --quiet git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib --quiet git extension-androidtools https://github.com/MAJigsaw77/extension-androidtools.git
+          haxelib --quiet git linc_luajit https://github.com/AndreiRudenko/linc_luajit.git
+          haxelib list
+
+      - name: Config Lime stuff
+        run: |
+          haxelib run lime setup -alias -y
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME
+          haxelib run lime config ANDROID_SETUP true
+          haxelib set flixel 4.11.0
+          haxelib set flixel-ui 2.4.0
+          haxelib set flixel-addons 2.11.0
+          haxelib set lime 7.9.0
+          haxelib set openfl 9.1.0
+          haxelib set flxanimate 1.2.0
+          haxelib list
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Compile APK
+        run: haxelib run lime build android -debug
+
+      - name: finally the apk
+        uses: actions/upload-artifact@main
+        with:
+          name: Hotline Medley Update
+          path: export/debug/android/bin/app/build/outputs/apk/debug
