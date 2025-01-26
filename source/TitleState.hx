@@ -603,12 +603,12 @@ class TitleState extends MusicBeatState
 				// credTextShit.screenCenter();
 				case 5:
 					#if PSYCH_WATERMARKS
-					createCoolText(['Not associated', 'with'], -40);
+					createCoolText(['mod', 'by'], -40);
 					#else
-					createCoolText(['In association', 'with'], -40);
+					createCoolText(['mod created', 'by'], -40);
 					#end
 				case 7:
-					addMoreText('newgrounds', -40);
+					addMoreText('mirtilo', -40);
 					ngSpr.visible = true;
 				// credTextShit.text += '\nNewgrounds';
 				case 8:
@@ -630,10 +630,10 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = "Friday";
 				// credTextShit.screenCenter();
 				case 13:
-					addMoreText('Friday');
+					addMoreText('fnf');
 				// credTextShit.visible = true;
 				case 14:
-					addMoreText('Night');
+					addMoreText('goofy');
 				// credTextShit.text += '\nNight';
 				case 15:
 					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
