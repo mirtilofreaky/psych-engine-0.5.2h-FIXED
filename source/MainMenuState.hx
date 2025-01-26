@@ -1,6 +1,6 @@
 package;
 
-#if desktop
+#if ddesktop
 import Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -140,14 +140,14 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
-		#if ACHIEVEMENTS_ALLOWED
-		Achievements.loadAchievements();
-		var leDate = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18) {
-			var achieveID:Int = Achievements.getAchievementIndex('friday_night_play');
-			if(!Achievements.isAchievementUnlocked(Achievements.achievementsStuff[achieveID][2])) { //It's a friday night. WEEEEEEEEEEEEEEEEEE
-				Achievements.achievementsMap.set(Achievements.achievementsStuff[achieveID][2], true);
-				giveAchievement();
+		//#if ACHIEVEMENTS_ALLOWED
+		//Achievements.loadAchievements();
+		//var leDate = Date.now();
+		//if (leDate.getDay() == 5 && leDate.getHours() >= 18) {
+			//var achieveID:Int = Achievements.getAchievementIndex('friday_night_play');
+			//if(!Achievements.isAchievementUnlocked(Achievements.achievementsStuff[achieveID][2])) { //It's a friday night. WEEEEEEEEEEEEEEEEEE
+				//Achievements.achievementsMap.set(Achievements.achievementsStuff[achieveID][2], true);
+				//giveAchievement();
 				ClientPrefs.saveSettings();
 			}
 		}
@@ -160,12 +160,12 @@ class MainMenuState extends MusicBeatState
 		super.create();
 	}
 
-	#if ACHIEVEMENTS_ALLOWED
+	//#if ACHIEVEMENTS_ALLOWED
 	// Unlocks "Freaky on a Friday Night" achievement
-	function giveAchievement() {
-		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-		trace('Giving achievement "friday_night_play"');
+	//function giveAchievement() {
+		//add(new AchievementObject('friday_night_play', camAchievement));
+		//FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+		//trace('Giving achievement "friday_night_play"');
 	}
 	#end
 
@@ -240,11 +240,11 @@ class MainMenuState extends MusicBeatState
 									case 'freeplay':
 										MusicBeatState.switchState(new FreeplayState());
 									#if MODS_ALLOWED
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState());
+									//case 'mods':
+										//MusicBeatState.switchState(new ModsMenuState());
 									#end
-									case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());
+									//case 'awards':
+										//MusicBeatState.switchState(new AchievementsMenuState());
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
